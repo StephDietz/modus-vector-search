@@ -35,8 +35,16 @@ export function search(query: string): string[] {
   if (!searchResults.isSuccessful) {
     return [searchResults.error];
   }
+  const searchTexts: string[] = [];
 
-  return searchResults.objects.map((obj) => obj.text);
+  for (let i = 0; i < searchResults.objects.length; i++) {
+    const obj = searchResults.objects[i];
+    const text = collections.getText(textsCollection, obj.key);
+    if (text) {
+      searchTexts.push(text);
+    }
+  }
+  return searchTexts;
 }
 
 export function miniLMEmbed(texts: string[]): f32[][] {
